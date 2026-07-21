@@ -1,0 +1,31 @@
+PARCHE: SISTEMA TOTAL + CESANTÍAS CORTO PLAZO
+
+Sobrescriba/agregue los archivos incluidos.
+
+Agregue al application.properties:
+
+balances-afp-patrimonios.tipo-patrimonio-cesantias-corto-plazo=5
+balances-afp-patrimonios.codigo-patrimonio-cesantias-corto-plazo=2
+
+Al pulsar el único botón se generan y guardan en la misma carpeta:
+
+1. SISTEMA TOTAL Mes Año.xlsx
+2. CESANTIAS CORTO PLAZO Mes Año.xlsx
+
+La descarga del navegador será un ZIP con ambos archivos.
+
+Cesantías corto plazo:
+- Tipo_Informe: el configurado para la aplicación (17)
+- Tipo_Entidad: 23
+- Estado entidad: 1
+- Tipo_Patrimonio: 5
+- Codigo_Patrimonio: 2
+- No crea hoja SKANDIA_ALT
+- Tiene hoja restot y selector dinámico de día
+- Usa las mismas cuentas PUC configuradas
+
+IMPORTANTE PARA LA PRUEBA UNITARIA:
+Si crea BalancesAfpPatrimoniosProperties manualmente, agregue:
+
+properties.setTipoPatrimonioCesantiasCortoPlazo(5);
+properties.setCodigoPatrimonioCesantiasCortoPlazo(2);

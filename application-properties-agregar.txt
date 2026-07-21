@@ -1,0 +1,3 @@
+# Cesantías largo plazo
+balances-afp-patrimonios.tipo-patrimonio-cesantias-largo-plazo=5
+balances-afp-patrimonios.codigo-patrimonio-cesantias-largo-plazo=1

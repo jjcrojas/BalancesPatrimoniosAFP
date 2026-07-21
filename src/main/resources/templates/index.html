@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Balances AFP Patrimonios</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
+</head>
+<body>
+
+<main class="card">
+
+    <h1>Reportes AFP de Patrimonios</h1>
+
+    <p class="lead">
+        Con una sola fecha se generan el archivo
+        <strong>Sistema Total</strong> y el archivo de
+        <strong>Cesantías Corto Plazo</strong>.
+        Ambos quedan en la misma carpeta de salida.
+    </p>
+
+    <form th:action="@{/reportes/balances-afp-patrimonios}"
+          th:object="${reporteForm}"
+          method="post">
+
+        <label for="fechaCorte">Fecha de corte</label>
+
+        <input id="fechaCorte"
+               type="date"
+               th:field="*{fechaCorte}"
+               required>
+
+        <p class="field-error"
+           th:if="${#fields.hasErrors('fechaCorte')}"
+           th:errors="*{fechaCorte}">
+        </p>
+
+        <label for="rutaBaseSalida">
+            Ruta base de salida
+        </label>
+
+        <input id="rutaBaseSalida"
+               class="route-input"
+               type="text"
+               th:field="*{rutaBaseSalida}"
+               required>
+
+        <p class="field-help">
+            La aplicación agrega automáticamente:
+            <strong>Balances\Año\Mes</strong>.
+        </p>
+
+        <p class="field-error"
+           th:if="${#fields.hasErrors('rutaBaseSalida')}"
+           th:errors="*{rutaBaseSalida}">
+        </p>
+
+        <button type="submit">
+            Generar todos los archivos
+        </button>
+
+    </form>
+
+    <section class="note">
+        <strong>Archivos generados:</strong>
+        <span>
+            SISTEMA TOTAL Mes Año.xlsx y
+            CESANTIAS CORTO PLAZO Mes Año.xlsx.
+            El navegador descarga un ZIP con ambos.
+        </span>
+    </section>
+
+    <p class="error"
+       th:if="${error}"
+       th:text="${error}">
+    </p>
+
+</main>
+
+</body>
+</html>

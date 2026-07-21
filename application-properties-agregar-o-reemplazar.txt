@@ -1,0 +1,5 @@
+# Ruta base predeterminada.
+# La aplicación agregará Balances\Año\Mes y el nombre del archivo.
+balances-afp-patrimonios.salidas-dir=C:\\Users\\jcrojas\\OneDrive - Superfinanciera\\Pensiones\\InformesDelegatura\\FORMATOS ACTUALIZADOS
+
+balances-afp-patrimonios.guardar-copia-local=true
