@@ -57,6 +57,23 @@ public class ExcelCesantiasCortoPlazoService {
 
             Styles styles = new Styles(workbook);
 
+            Map<String, Map<DailyKey, BigDecimal>> datosPorClaveReporte =
+                    datos.stream()
+                            .collect(
+                                    Collectors.groupingBy(
+                                            BalanceDiario::claveReporte,
+                                            Collectors.toMap(
+                                                    dato -> new DailyKey(
+                                                            dato.codigoPuc(),
+                                                            dato.fecha().getDayOfMonth()
+                                                    ),
+                                                    BalanceDiario::valorMiles,
+                                                    BigDecimal::add,
+                                                    LinkedHashMap::new
+                                            )
+                                    )
+                            );
+
             /*
              * Se crean primero las hojas de las entidades para conocer
              * los nombres definitivos de las hojas. Esos nombres se usan
@@ -72,7 +89,10 @@ public class ExcelCesantiasCortoPlazoService {
                         fechaCorte,
                         entidad,
                         cuentas,
-                        datos
+                        datosPorClaveReporte.getOrDefault(
+                                entidad.claveReporte(),
+                                Map.of()
+                        )
                 );
 
                 hojaPorClaveReporte.put(
@@ -445,7 +465,7 @@ public class ExcelCesantiasCortoPlazoService {
             LocalDate fechaCorte,
             EntidadReporte entidad,
             List<CuentaPuc> cuentas,
-            List<BalanceDiario> datos) {
+            Map<DailyKey, BigDecimal> daily) {
 
         String nombreHoja =
                 nombreHojaUnico(
@@ -543,29 +563,6 @@ public class ExcelCesantiasCortoPlazoService {
             cell.setCellValue("D" + day);
             cell.setCellStyle(styles.header);
         }
-
-        Map<DailyKey, BigDecimal> daily =
-                datos.stream()
-                        .filter(
-                                dato ->
-                                        dato.claveReporte()
-                                                .equals(
-                                                        entidad
-                                                                .claveReporte()
-                                                )
-                        )
-                        .collect(
-                                Collectors.toMap(
-                                        dato ->
-                                                new DailyKey(
-                                                        dato.codigoPuc(),
-                                                        dato.fecha()
-                                                                .getDayOfMonth()
-                                                ),
-                                        BalanceDiario::valorMiles,
-                                        BigDecimal::add
-                                )
-                        );
 
         int rowIndex = 5;
 

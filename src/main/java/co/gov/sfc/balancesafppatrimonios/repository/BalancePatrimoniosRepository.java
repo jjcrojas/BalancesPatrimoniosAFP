@@ -22,6 +22,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Repository
 public class BalancePatrimoniosRepository {
@@ -341,9 +344,11 @@ public class BalancePatrimoniosRepository {
 		List<CuentaPuc> encontradas = ejecutarConsultaConReintento("consulta de cuentas PUC", SQL_CUENTAS, params,
 				(rs, rowNum) -> new CuentaPuc(rs.getInt("codigo_puc"), rs.getString("nombre_cuenta")));
 
-		return properties
-				.getCodigosPuc().stream().map(codigo -> encontradas.stream()
-						.filter(cuenta -> cuenta.codigoPuc() == codigo).findFirst().orElse(new CuentaPuc(codigo, "")))
+		Map<Integer, CuentaPuc> cuentaPorCodigo = encontradas.stream()
+				.collect(Collectors.toMap(CuentaPuc::codigoPuc, Function.identity(), (actual, duplicada) -> actual));
+
+		return properties.getCodigosPuc().stream()
+				.map(codigo -> cuentaPorCodigo.getOrDefault(codigo, new CuentaPuc(codigo, "")))
 				.toList();
 	}
 
