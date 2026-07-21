@@ -18,10 +18,11 @@
     <h1>Reportes AFP de Patrimonios</h1>
 
     <p class="lead">
-        Con una sola fecha se generan el archivo
-        <strong>Sistema Total</strong> y el archivo de
-        <strong>Cesantías Corto Plazo</strong>.
-        Ambos quedan en la misma carpeta de salida.
+        Con una sola fecha se generan los archivos de
+        <strong>Sistema Total</strong>,
+        <strong>Cesantías Corto Plazo</strong> y
+        <strong>Cesantías Largo Plazo</strong>.
+        Todos quedan en la misma carpeta de salida.
     </p>
 
     <form th:action="@{/reportes/balances-afp-patrimonios}"
@@ -69,9 +70,10 @@
     <section class="note">
         <strong>Archivos generados:</strong>
         <span>
-            SISTEMA TOTAL Mes Año.xlsx y
-            CESANTIAS CORTO PLAZO Mes Año.xlsx.
-            El navegador descarga un ZIP con ambos.
+            SISTEMA TOTAL Mes Año.xlsx,
+            CESANTIAS CORTO PLAZO Mes Año.xlsx y
+            CESANTIAS LARGO PLAZO Mes Año.xlsx.
+            El navegador descarga un ZIP con todos.
         </span>
     </section>
 
