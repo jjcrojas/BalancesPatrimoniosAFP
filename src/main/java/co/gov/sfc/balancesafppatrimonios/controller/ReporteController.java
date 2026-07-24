@@ -8,6 +8,7 @@ import co.gov.sfc.balancesafppatrimonios.model.ReporteForm;
 import co.gov.sfc.balancesafppatrimonios.repository.BalancePatrimoniosRepository;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelCesantiasCortoPlazoService;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelCesantiasLargoPlazoService;
+import co.gov.sfc.balancesafppatrimonios.service.ExcelCesantiasTotalService;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelPatrimoniosService;
 import co.gov.sfc.balancesafppatrimonios.service.ReportesZipService;
 import jakarta.validation.Valid;
@@ -48,6 +49,7 @@ public class ReporteController {
     private final ExcelPatrimoniosService excelPatrimoniosService;
     private final ExcelCesantiasCortoPlazoService excelCesantiasCortoPlazoService;
     private final ExcelCesantiasLargoPlazoService excelCesantiasLargoPlazoService;
+    private final ExcelCesantiasTotalService excelCesantiasTotalService;
     private final ReportesZipService reportesZipService;
     private final BalancesAfpPatrimoniosProperties properties;
 
@@ -56,6 +58,7 @@ public class ReporteController {
             ExcelPatrimoniosService excelPatrimoniosService,
             ExcelCesantiasCortoPlazoService excelCesantiasCortoPlazoService,
             ExcelCesantiasLargoPlazoService excelCesantiasLargoPlazoService,
+            ExcelCesantiasTotalService excelCesantiasTotalService,
             ReportesZipService reportesZipService,
             BalancesAfpPatrimoniosProperties properties) {
 
@@ -65,6 +68,7 @@ public class ReporteController {
                 excelCesantiasCortoPlazoService;
         this.excelCesantiasLargoPlazoService =
                 excelCesantiasLargoPlazoService;
+        this.excelCesantiasTotalService = excelCesantiasTotalService;
         this.reportesZipService = reportesZipService;
         this.properties = properties;
     }
@@ -175,6 +179,18 @@ public class ReporteController {
                             datosLargoPlazo
                     );
 
+            List<BalanceDiario> datosCesantiasTotal =
+                    repository.consultarCesantiasTotal(fechaCorte);
+
+            ExcelCesantiasTotalService.GeneratedReport cesantiasTotal =
+                    excelCesantiasTotalService.generar(
+                            fechaCorte,
+                            rutaBaseSalida,
+                            entidadesFisicas,
+                            cuentas,
+                            datosCesantiasTotal
+                    );
+
             registrarGuardado(
                     sistemaTotal.archivoGuardado()
             );
@@ -185,6 +201,10 @@ public class ReporteController {
 
             registrarGuardado(
                     largoPlazo.archivoGuardado()
+            );
+
+            registrarGuardado(
+                    cesantiasTotal.archivoGuardado()
             );
 
             byte[] zip =
@@ -201,6 +221,10 @@ public class ReporteController {
                                     new ReportesZipService.ArchivoZip(
                                             largoPlazo.fileName(),
                                             largoPlazo.content()
+                                    ),
+                                    new ReportesZipService.ArchivoZip(
+                                            cesantiasTotal.fileName(),
+                                            cesantiasTotal.content()
                                     )
                             )
                     );
