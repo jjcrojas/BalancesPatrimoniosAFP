@@ -59,6 +59,12 @@ public class BalancesAfpPatrimoniosProperties {
 	private List<Integer> codigosPatrimonioCesantiasTotal;
 
 	@NotNull
+	private Integer tipoPatrimonioConservador;
+
+	@NotNull
+	private Integer codigoPatrimonioConservador;
+
+	@NotNull
 	private Boolean guardarCopiaLocal;
 
 	@NotNull
@@ -196,6 +202,22 @@ public class BalancesAfpPatrimoniosProperties {
 
 	public void setCodigosPatrimonioCesantiasTotal(List<Integer> codigosPatrimonioCesantiasTotal) {
 		this.codigosPatrimonioCesantiasTotal = codigosPatrimonioCesantiasTotal;
+	}
+
+	public Integer getTipoPatrimonioConservador() {
+		return tipoPatrimonioConservador;
+	}
+
+	public void setTipoPatrimonioConservador(Integer tipoPatrimonioConservador) {
+		this.tipoPatrimonioConservador = tipoPatrimonioConservador;
+	}
+
+	public Integer getCodigoPatrimonioConservador() {
+		return codigoPatrimonioConservador;
+	}
+
+	public void setCodigoPatrimonioConservador(Integer codigoPatrimonioConservador) {
+		this.codigoPatrimonioConservador = codigoPatrimonioConservador;
 	}
 
 	public Boolean getGuardarCopiaLocal() {
