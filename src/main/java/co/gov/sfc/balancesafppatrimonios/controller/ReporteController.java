@@ -9,6 +9,7 @@ import co.gov.sfc.balancesafppatrimonios.repository.BalancePatrimoniosRepository
 import co.gov.sfc.balancesafppatrimonios.service.ExcelCesantiasCortoPlazoService;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelCesantiasLargoPlazoService;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelCesantiasTotalService;
+import co.gov.sfc.balancesafppatrimonios.service.ExcelConservadorService;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelPatrimoniosService;
 import co.gov.sfc.balancesafppatrimonios.service.ReportesZipService;
 import jakarta.validation.Valid;
@@ -50,6 +51,7 @@ public class ReporteController {
     private final ExcelCesantiasCortoPlazoService excelCesantiasCortoPlazoService;
     private final ExcelCesantiasLargoPlazoService excelCesantiasLargoPlazoService;
     private final ExcelCesantiasTotalService excelCesantiasTotalService;
+    private final ExcelConservadorService excelConservadorService;
     private final ReportesZipService reportesZipService;
     private final BalancesAfpPatrimoniosProperties properties;
 
@@ -59,6 +61,7 @@ public class ReporteController {
             ExcelCesantiasCortoPlazoService excelCesantiasCortoPlazoService,
             ExcelCesantiasLargoPlazoService excelCesantiasLargoPlazoService,
             ExcelCesantiasTotalService excelCesantiasTotalService,
+            ExcelConservadorService excelConservadorService,
             ReportesZipService reportesZipService,
             BalancesAfpPatrimoniosProperties properties) {
 
@@ -69,6 +72,7 @@ public class ReporteController {
         this.excelCesantiasLargoPlazoService =
                 excelCesantiasLargoPlazoService;
         this.excelCesantiasTotalService = excelCesantiasTotalService;
+        this.excelConservadorService = excelConservadorService;
         this.reportesZipService = reportesZipService;
         this.properties = properties;
     }
@@ -191,6 +195,18 @@ public class ReporteController {
                             datosCesantiasTotal
                     );
 
+            List<BalanceDiario> datosConservador =
+                    repository.consultarConservador(fechaCorte);
+
+            ExcelConservadorService.GeneratedReport conservador =
+                    excelConservadorService.generar(
+                            fechaCorte,
+                            rutaBaseSalida,
+                            entidadesFisicas,
+                            cuentas,
+                            datosConservador
+                    );
+
             registrarGuardado(
                     sistemaTotal.archivoGuardado()
             );
@@ -205,6 +221,10 @@ public class ReporteController {
 
             registrarGuardado(
                     cesantiasTotal.archivoGuardado()
+            );
+
+            registrarGuardado(
+                    conservador.archivoGuardado()
             );
 
             byte[] zip =
@@ -225,6 +245,10 @@ public class ReporteController {
                                     new ReportesZipService.ArchivoZip(
                                             cesantiasTotal.fileName(),
                                             cesantiasTotal.content()
+                                    ),
+                                    new ReportesZipService.ArchivoZip(
+                                            conservador.fileName(),
+                                            conservador.content()
                                     )
                             )
                     );
