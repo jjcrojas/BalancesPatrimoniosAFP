@@ -59,6 +59,18 @@ public class BalancesAfpPatrimoniosProperties {
 	private List<Integer> codigosPatrimonioCesantiasTotal;
 
 	@NotNull
+	private Integer tipoPatrimonioConservador;
+
+	@NotNull
+	private Integer codigoPatrimonioConservador;
+
+	@NotNull
+	private Integer tipoPatrimonioMayorRiesgo;
+
+	@NotNull
+	private Integer codigoPatrimonioMayorRiesgo;
+
+	@NotNull
 	private Boolean guardarCopiaLocal;
 
 	@NotNull
@@ -196,6 +208,38 @@ public class BalancesAfpPatrimoniosProperties {
 
 	public void setCodigosPatrimonioCesantiasTotal(List<Integer> codigosPatrimonioCesantiasTotal) {
 		this.codigosPatrimonioCesantiasTotal = codigosPatrimonioCesantiasTotal;
+	}
+
+	public Integer getTipoPatrimonioConservador() {
+		return tipoPatrimonioConservador;
+	}
+
+	public void setTipoPatrimonioConservador(Integer tipoPatrimonioConservador) {
+		this.tipoPatrimonioConservador = tipoPatrimonioConservador;
+	}
+
+	public Integer getCodigoPatrimonioConservador() {
+		return codigoPatrimonioConservador;
+	}
+
+	public void setCodigoPatrimonioConservador(Integer codigoPatrimonioConservador) {
+		this.codigoPatrimonioConservador = codigoPatrimonioConservador;
+	}
+
+	public Integer getTipoPatrimonioMayorRiesgo() {
+		return tipoPatrimonioMayorRiesgo;
+	}
+
+	public void setTipoPatrimonioMayorRiesgo(Integer tipoPatrimonioMayorRiesgo) {
+		this.tipoPatrimonioMayorRiesgo = tipoPatrimonioMayorRiesgo;
+	}
+
+	public Integer getCodigoPatrimonioMayorRiesgo() {
+		return codigoPatrimonioMayorRiesgo;
+	}
+
+	public void setCodigoPatrimonioMayorRiesgo(Integer codigoPatrimonioMayorRiesgo) {
+		this.codigoPatrimonioMayorRiesgo = codigoPatrimonioMayorRiesgo;
 	}
 
 	public Boolean getGuardarCopiaLocal() {

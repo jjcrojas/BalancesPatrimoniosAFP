@@ -14,6 +14,11 @@ La aplicación consulta directamente Teradata y genera un archivo Excel con:
 - columnas diarias `D1` a `D31`;
 - total del sistema en `restot`.
 
+La descarga agrupa en un ZIP los reportes de Sistema Total, Cesantías Corto
+Plazo, Cesantías Largo Plazo, Cesantías Total, Conservador y Mayor Riesgo. El
+reporte Conservador filtra el tipo de patrimonio `6` y el código `5000`; Mayor
+Riesgo utiliza el mismo tipo de patrimonio y el código `6000`.
+
 ## Normalización de nombres de entidades
 
 La aplicación elimina las comillas dobles que puedan estar almacenadas en
