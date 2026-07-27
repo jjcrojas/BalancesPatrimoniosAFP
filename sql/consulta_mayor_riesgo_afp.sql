@@ -1,4 +1,4 @@
--- Conservador
+-- Mayor Riesgo
 SELECT
     e.Codigo_Entidad AS codigo_entidad,
     TRIM(OREPLACE(e.Nombre_Entidad, '"', '')) AS nombre_entidad,
@@ -16,7 +16,7 @@ WHERE eip.Tipo_Informe = 17
   AND e.Tipo_Entidad = 23
   AND e.Estado = 1
   AND pa.Tipo_Patrimonio = 6
-  AND pa.Codigo_Patrimonio = 5000
+  AND pa.Codigo_Patrimonio = 6000
   AND p.Codigo IN (100000, 110000, 110500, 110505, 110510, 110515, 110520)
   AND t.Fecha BETWEEN '2026-06-01' AND '2026-06-30'
 GROUP BY 1, 2, 3, 4, 5, 6

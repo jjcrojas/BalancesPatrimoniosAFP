@@ -10,6 +10,7 @@ import co.gov.sfc.balancesafppatrimonios.service.ExcelCesantiasCortoPlazoService
 import co.gov.sfc.balancesafppatrimonios.service.ExcelCesantiasLargoPlazoService;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelCesantiasTotalService;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelConservadorService;
+import co.gov.sfc.balancesafppatrimonios.service.ExcelMayorRiesgoService;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelPatrimoniosService;
 import co.gov.sfc.balancesafppatrimonios.service.ReportesZipService;
 import jakarta.validation.Valid;
@@ -52,6 +53,7 @@ public class ReporteController {
     private final ExcelCesantiasLargoPlazoService excelCesantiasLargoPlazoService;
     private final ExcelCesantiasTotalService excelCesantiasTotalService;
     private final ExcelConservadorService excelConservadorService;
+    private final ExcelMayorRiesgoService excelMayorRiesgoService;
     private final ReportesZipService reportesZipService;
     private final BalancesAfpPatrimoniosProperties properties;
 
@@ -62,6 +64,7 @@ public class ReporteController {
             ExcelCesantiasLargoPlazoService excelCesantiasLargoPlazoService,
             ExcelCesantiasTotalService excelCesantiasTotalService,
             ExcelConservadorService excelConservadorService,
+            ExcelMayorRiesgoService excelMayorRiesgoService,
             ReportesZipService reportesZipService,
             BalancesAfpPatrimoniosProperties properties) {
 
@@ -73,6 +76,7 @@ public class ReporteController {
                 excelCesantiasLargoPlazoService;
         this.excelCesantiasTotalService = excelCesantiasTotalService;
         this.excelConservadorService = excelConservadorService;
+        this.excelMayorRiesgoService = excelMayorRiesgoService;
         this.reportesZipService = reportesZipService;
         this.properties = properties;
     }
@@ -207,6 +211,18 @@ public class ReporteController {
                             datosConservador
                     );
 
+            List<BalanceDiario> datosMayorRiesgo =
+                    repository.consultarMayorRiesgo(fechaCorte);
+
+            ExcelMayorRiesgoService.GeneratedReport mayorRiesgo =
+                    excelMayorRiesgoService.generar(
+                            fechaCorte,
+                            rutaBaseSalida,
+                            entidadesFisicas,
+                            cuentas,
+                            datosMayorRiesgo
+                    );
+
             registrarGuardado(
                     sistemaTotal.archivoGuardado()
             );
@@ -225,6 +241,10 @@ public class ReporteController {
 
             registrarGuardado(
                     conservador.archivoGuardado()
+            );
+
+            registrarGuardado(
+                    mayorRiesgo.archivoGuardado()
             );
 
             byte[] zip =
@@ -249,6 +269,10 @@ public class ReporteController {
                                     new ReportesZipService.ArchivoZip(
                                             conservador.fileName(),
                                             conservador.content()
+                                    ),
+                                    new ReportesZipService.ArchivoZip(
+                                            mayorRiesgo.fileName(),
+                                            mayorRiesgo.content()
                                     )
                             )
                     );
