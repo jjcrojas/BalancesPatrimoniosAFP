@@ -293,6 +293,31 @@ public class BalancePatrimoniosRepository {
 			ORDER BY 1, 4, 6
 			""";
 
+	private static final String SQL_RETIRO_PROGRAMADO = """
+			SELECT
+			    e.Codigo_Entidad AS codigo_entidad,
+			    TRIM(OREPLACE(e.Nombre_Entidad, '"', '')) AS nombre_entidad,
+			    'ENT_' || TRIM(CAST(e.Codigo_Entidad AS VARCHAR(20))) AS clave_reporte,
+			    p.Codigo AS codigo_puc,
+			    TRIM(p.Nombre) AS nombre_cuenta,
+			    t.Fecha AS fecha,
+			    SUM(eip.Saldo_Sincierre_Total_Moneda_0) / 1000 AS valor_miles
+			FROM PROD_DWH_CONSULTA.ESTFIN_INDIV_PA eip
+			INNER JOIN PROD_DWH_CONSULTA.ENTIDADES e ON eip.Ent_ID = e.Ent_ID
+			INNER JOIN PROD_DWH_CONSULTA.PATRIMONIOS_AUTONOMOS pa ON eip.Paau_ID = pa.Paau_ID
+			INNER JOIN PROD_DWH_CONSULTA.TIEMPO t ON eip.Tie_ID = t.Tie_ID
+			INNER JOIN PROD_DWH_CONSULTA.PUC p ON eip.Puc_ID = p.Puc_ID
+			WHERE eip.Tipo_Informe = :tipoInforme
+			  AND e.Tipo_Entidad = :tipoEntidad
+			  AND e.Estado = :estadoVigente
+			  AND pa.Tipo_Patrimonio = :tipoPatrimonioRetiroProgramado
+			  AND pa.Codigo_Patrimonio = :codigoPatrimonioRetiroProgramado
+			  AND p.Codigo IN (:codigosPuc)
+			  AND t.Fecha BETWEEN :fechaInicial AND :fechaCorte
+			GROUP BY 1, 2, 3, 4, 5, 6
+			ORDER BY 1, 4, 6
+			""";
+
 	private static final String SQL_MODERADO = """
 			SELECT
 			    e.Codigo_Entidad AS codigo_entidad,
@@ -518,6 +543,16 @@ public class BalancePatrimoniosRepository {
 				.addValue("codigoPatrimonioConservador", properties.getCodigoPatrimonioConservador());
 
 		return ejecutarBalances("Conservador", SQL_CONSERVADOR, params);
+	}
+
+	public List<BalanceDiario> consultarRetiroProgramado(LocalDate fechaCorte) {
+		LocalDate fechaInicial = fechaCorte.withDayOfMonth(1);
+
+		MapSqlParameterSource params = parametrosComunes(fechaInicial, fechaCorte)
+				.addValue("tipoPatrimonioRetiroProgramado", properties.getTipoPatrimonioRetiroProgramado())
+				.addValue("codigoPatrimonioRetiroProgramado", properties.getCodigoPatrimonioRetiroProgramado());
+
+		return ejecutarBalances("Retiro Programado", SQL_RETIRO_PROGRAMADO, params);
 	}
 
 	public List<BalanceDiario> consultarModerado(LocalDate fechaCorte) {

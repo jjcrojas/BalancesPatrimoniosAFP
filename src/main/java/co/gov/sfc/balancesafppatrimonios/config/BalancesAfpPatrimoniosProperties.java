@@ -71,6 +71,12 @@ public class BalancesAfpPatrimoniosProperties {
 	private Integer codigoPatrimonioModerado;
 
 	@NotNull
+	private Integer tipoPatrimonioRetiroProgramado;
+
+	@NotNull
+	private Integer codigoPatrimonioRetiroProgramado;
+
+	@NotNull
 	private Integer tipoPatrimonioMayorRiesgo;
 
 	@NotNull
@@ -246,6 +252,22 @@ public class BalancesAfpPatrimoniosProperties {
 
 	public void setCodigoPatrimonioModerado(Integer codigoPatrimonioModerado) {
 		this.codigoPatrimonioModerado = codigoPatrimonioModerado;
+	}
+
+	public Integer getTipoPatrimonioRetiroProgramado() {
+		return tipoPatrimonioRetiroProgramado;
+	}
+
+	public void setTipoPatrimonioRetiroProgramado(Integer tipoPatrimonioRetiroProgramado) {
+		this.tipoPatrimonioRetiroProgramado = tipoPatrimonioRetiroProgramado;
+	}
+
+	public Integer getCodigoPatrimonioRetiroProgramado() {
+		return codigoPatrimonioRetiroProgramado;
+	}
+
+	public void setCodigoPatrimonioRetiroProgramado(Integer codigoPatrimonioRetiroProgramado) {
+		this.codigoPatrimonioRetiroProgramado = codigoPatrimonioRetiroProgramado;
 	}
 
 	public Integer getTipoPatrimonioMayorRiesgo() {

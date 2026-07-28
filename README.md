@@ -15,9 +15,9 @@ La aplicación consulta directamente Teradata y genera un archivo Excel con:
 - total del sistema en `restot`.
 
 La descarga agrupa en un ZIP los reportes de Sistema Total, Cesantías Corto
-Plazo, Cesantías Largo Plazo, Cesantías Total, Conservador, Moderado y Mayor Riesgo. El
+Plazo, Cesantías Largo Plazo, Cesantías Total, Conservador, Moderado, Mayor Riesgo y Retiro Programado. El
 reporte Conservador filtra el tipo de patrimonio `6` y el código `5000`; Moderado usa el tipo `6` y el código `1000` e incluye una hoja separada `SKANDIA_ALT` para los patrimonios alternativos configurados; Mayor
-Riesgo utiliza el mismo tipo de patrimonio y el código `6000`.
+Riesgo utiliza el mismo tipo de patrimonio y el código `6000`; Retiro Programado usa el tipo `6` y el código `7000`, sin hoja de Skandia Alternativo.
 
 ## Normalización de nombres de entidades
 
