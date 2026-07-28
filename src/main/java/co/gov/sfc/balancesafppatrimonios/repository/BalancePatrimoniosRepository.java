@@ -297,7 +297,13 @@ public class BalancePatrimoniosRepository {
 			SELECT
 			    e.Codigo_Entidad AS codigo_entidad,
 			    TRIM(OREPLACE(e.Nombre_Entidad, '"', '')) AS nombre_entidad,
-			    'ENT_' || TRIM(CAST(e.Codigo_Entidad AS VARCHAR(20))) AS clave_reporte,
+			    CASE
+			        WHEN e.Codigo_Entidad = :codigoSkandia
+			         AND pa.Tipo_Patrimonio = :tipoPatrimonioModerado
+			         AND pa.Codigo_Patrimonio IN (:patrimoniosSkandiaAlt)
+			            THEN 'SKANDIA_ALT'
+			        ELSE 'ENT_' || TRIM(CAST(e.Codigo_Entidad AS VARCHAR(20)))
+			    END AS clave_reporte,
 			    p.Codigo AS codigo_puc,
 			    TRIM(p.Nombre) AS nombre_cuenta,
 			    t.Fecha AS fecha,
@@ -311,7 +317,13 @@ public class BalancePatrimoniosRepository {
 			  AND e.Tipo_Entidad = :tipoEntidad
 			  AND e.Estado = :estadoVigente
 			  AND pa.Tipo_Patrimonio = :tipoPatrimonioModerado
-			  AND pa.Codigo_Patrimonio = :codigoPatrimonioModerado
+			  AND (
+			        pa.Codigo_Patrimonio = :codigoPatrimonioModerado
+			        OR (
+			            e.Codigo_Entidad = :codigoSkandia
+			            AND pa.Codigo_Patrimonio IN (:patrimoniosSkandiaAlt)
+			        )
+			      )
 			  AND p.Codigo IN (:codigosPuc)
 			  AND t.Fecha BETWEEN :fechaInicial AND :fechaCorte
 			GROUP BY 1, 2, 3, 4, 5, 6
@@ -513,7 +525,9 @@ public class BalancePatrimoniosRepository {
 
 		MapSqlParameterSource params = parametrosComunes(fechaInicial, fechaCorte)
 				.addValue("tipoPatrimonioModerado", properties.getTipoPatrimonioModerado())
-				.addValue("codigoPatrimonioModerado", properties.getCodigoPatrimonioModerado());
+				.addValue("codigoPatrimonioModerado", properties.getCodigoPatrimonioModerado())
+				.addValue("codigoSkandia", properties.getCodigoEntidadSkandia())
+				.addValue("patrimoniosSkandiaAlt", properties.getCodigosPatrimonioSkandiaAlternativo());
 
 		return ejecutarBalances("Moderado", SQL_MODERADO, params);
 	}

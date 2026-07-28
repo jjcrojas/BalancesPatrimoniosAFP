@@ -222,7 +222,7 @@ public class ReporteController {
                     excelModeradoService.generar(
                             fechaCorte,
                             rutaBaseSalida,
-                            entidadesFisicas,
+                            entidadesSistemaTotal,
                             cuentas,
                             datosModerado
                     );
