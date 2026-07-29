@@ -14,6 +14,7 @@ import co.gov.sfc.balancesafppatrimonios.service.ExcelMayorRiesgoService;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelModeradoService;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelPatrimoniosService;
 import co.gov.sfc.balancesafppatrimonios.service.ExcelRetiroProgramadoService;
+import co.gov.sfc.balancesafppatrimonios.service.ExcelVoluntariasService;
 import co.gov.sfc.balancesafppatrimonios.service.ReportesZipService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -58,6 +59,7 @@ public class ReporteController {
     private final ExcelMayorRiesgoService excelMayorRiesgoService;
     private final ExcelModeradoService excelModeradoService;
     private final ExcelRetiroProgramadoService excelRetiroProgramadoService;
+    private final ExcelVoluntariasService excelVoluntariasService;
     private final ReportesZipService reportesZipService;
     private final BalancesAfpPatrimoniosProperties properties;
 
@@ -71,6 +73,7 @@ public class ReporteController {
             ExcelMayorRiesgoService excelMayorRiesgoService,
             ExcelModeradoService excelModeradoService,
             ExcelRetiroProgramadoService excelRetiroProgramadoService,
+            ExcelVoluntariasService excelVoluntariasService,
             ReportesZipService reportesZipService,
             BalancesAfpPatrimoniosProperties properties) {
 
@@ -85,6 +88,7 @@ public class ReporteController {
         this.excelMayorRiesgoService = excelMayorRiesgoService;
         this.excelModeradoService = excelModeradoService;
         this.excelRetiroProgramadoService = excelRetiroProgramadoService;
+        this.excelVoluntariasService = excelVoluntariasService;
         this.reportesZipService = reportesZipService;
         this.properties = properties;
     }
@@ -231,6 +235,21 @@ public class ReporteController {
                             datosModerado
                     );
 
+            List<EntidadReporte> entidadesVoluntarias =
+                    repository.consultarEntidadesVoluntarias();
+
+            List<BalanceDiario> datosVoluntarias =
+                    repository.consultarVoluntarias(fechaCorte);
+
+            ExcelVoluntariasService.GeneratedReport voluntarias =
+                    excelVoluntariasService.generar(
+                            fechaCorte,
+                            rutaBaseSalida,
+                            entidadesVoluntarias,
+                            cuentas,
+                            datosVoluntarias
+                    );
+
             List<BalanceDiario> datosRetiroProgramado =
                     repository.consultarRetiroProgramado(fechaCorte);
 
@@ -287,6 +306,10 @@ public class ReporteController {
                     retiroProgramado.archivoGuardado()
             );
 
+            registrarGuardado(
+                    voluntarias.archivoGuardado()
+            );
+
             byte[] zip =
                     reportesZipService.crearZip(
                             List.of(
@@ -321,6 +344,10 @@ public class ReporteController {
                                     new ReportesZipService.ArchivoZip(
                                             retiroProgramado.fileName(),
                                             retiroProgramado.content()
+                                    ),
+                                    new ReportesZipService.ArchivoZip(
+                                            voluntarias.fileName(),
+                                            voluntarias.content()
                                     )
                             )
                     );

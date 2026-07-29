@@ -47,6 +47,17 @@ public class BalancePatrimoniosRepository {
 			ORDER BY 1
 			""";
 
+	private static final String SQL_ENTIDADES_VOLUNTARIAS = """
+			SELECT DISTINCT
+			    e.Codigo_Entidad AS codigo_entidad,
+			    TRIM(OREPLACE(e.Nombre_Entidad, '"', '')) AS nombre_entidad
+			FROM PROD_DWH_CONSULTA.ENTIDADES e
+			WHERE e.Tipo_Entidad = :tipoEntidad
+			  AND e.Estado = :estadoVigente
+			  AND e.Codigo_Entidad IN (16, 18, 27, 31, 33, 34, 42, 59, 61, 62, 63)
+			ORDER BY 1
+			""";
+
 	private static final String SQL_BALANCES = """
 			SELECT
 			    e.Codigo_Entidad AS codigo_entidad,
@@ -380,6 +391,43 @@ public class BalancePatrimoniosRepository {
 			ORDER BY 1, 4, 6
 			""";
 
+	private static final String SQL_VOLUNTARIAS = """
+			SELECT
+			    e.Codigo_Entidad AS codigo_entidad,
+			    TRIM(OREPLACE(e.Nombre_Entidad, '"', '')) AS nombre_entidad,
+			    'ENT_' || TRIM(CAST(e.Codigo_Entidad AS VARCHAR(20))) AS clave_reporte,
+			    p.Codigo AS codigo_puc,
+			    TRIM(p.Nombre) AS nombre_cuenta,
+			    t.Fecha AS fecha,
+			    SUM(eip.Saldo_Sincierre_Total_Moneda_0) / 1000 AS valor_miles
+			FROM PROD_DWH_CONSULTA.ESTFIN_INDIV_PA eip
+			INNER JOIN PROD_DWH_CONSULTA.ENTIDADES e ON eip.Ent_ID = e.Ent_ID
+			INNER JOIN PROD_DWH_CONSULTA.PATRIMONIOS_AUTONOMOS pa ON eip.Paau_ID = pa.Paau_ID
+			INNER JOIN PROD_DWH_CONSULTA.TIEMPO t ON eip.Tie_ID = t.Tie_ID
+			INNER JOIN PROD_DWH_CONSULTA.PUC p ON eip.Puc_ID = p.Puc_ID
+			WHERE eip.Tipo_Informe = :tipoInformeVoluntarias
+			  AND e.Tipo_Entidad = :tipoEntidadVoluntarias
+			  AND e.Estado = :estadoVigente
+			  AND (
+			        (e.Codigo_Entidad = 27 AND pa.Codigo_Patrimonio = 5619)
+			        OR (e.Codigo_Entidad = 16 AND pa.Codigo_Patrimonio IN (50174, 10815))
+			        OR (e.Codigo_Entidad = 18 AND pa.Codigo_Patrimonio IN (11357, 11359))
+			        OR (e.Codigo_Entidad = 27 AND pa.Codigo_Patrimonio = 3246)
+			        OR (e.Codigo_Entidad = 31 AND pa.Codigo_Patrimonio = 3164)
+			        OR (e.Codigo_Entidad = 42 AND pa.Codigo_Patrimonio = 10110)
+			        OR (e.Codigo_Entidad = 33 AND pa.Codigo_Patrimonio = 20369)
+			        OR (e.Codigo_Entidad = 59 AND pa.Codigo_Patrimonio = 38293)
+			        OR (e.Codigo_Entidad = 34 AND pa.Codigo_Patrimonio = 58081)
+			        OR (e.Codigo_Entidad = 61 AND pa.Codigo_Patrimonio = 68293)
+			        OR (e.Codigo_Entidad = 63 AND pa.Codigo_Patrimonio = 77758)
+			        OR (e.Codigo_Entidad = 62 AND pa.Codigo_Patrimonio = 83714)
+			      )
+			  AND p.Codigo IN (:codigosPuc)
+			  AND t.Fecha BETWEEN :fechaInicial AND :fechaCorte
+			GROUP BY 1, 2, 3, 4, 5, 6
+			ORDER BY 1, 4, 6
+			""";
+
 	private static final String SQL_CUENTAS = """
 			SELECT
 			    p.Codigo AS codigo_puc,
@@ -428,6 +476,23 @@ public class BalancePatrimoniosRepository {
 							nombreHoja(nombre, codigo),
 							false
 					);
+				}
+		);
+	}
+
+	public List<EntidadReporte> consultarEntidadesVoluntarias() {
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("tipoEntidad", properties.getTipoEntidadVoluntarias())
+				.addValue("estadoVigente", properties.getEstadoEntidadVigente());
+
+		return ejecutarConsultaConReintento(
+				"consulta de entidades voluntarias vigentes",
+				SQL_ENTIDADES_VOLUNTARIAS,
+				params,
+				(rs, rowNum) -> {
+					int codigo = rs.getInt("codigo_entidad");
+					String nombre = limpiarNombre(rs.getString("nombre_entidad"));
+					return new EntidadReporte(codigo, nombre, "ENT_" + codigo, nombreHoja(nombre, codigo), false);
 				}
 		);
 	}
@@ -543,6 +608,20 @@ public class BalancePatrimoniosRepository {
 				.addValue("codigoPatrimonioConservador", properties.getCodigoPatrimonioConservador());
 
 		return ejecutarBalances("Conservador", SQL_CONSERVADOR, params);
+	}
+
+	public List<BalanceDiario> consultarVoluntarias(LocalDate fechaCorte) {
+		LocalDate fechaInicial = fechaCorte.withDayOfMonth(1);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("tipoInformeVoluntarias", properties.getTipoInformeVoluntarias())
+				.addValue("tipoEntidadVoluntarias", properties.getTipoEntidadVoluntarias())
+				.addValue("estadoVigente", properties.getEstadoEntidadVigente())
+				.addValue("codigosPuc", properties.getCodigosPuc())
+				.addValue("fechaInicial", Date.valueOf(fechaInicial))
+				.addValue("fechaCorte", Date.valueOf(fechaCorte));
+
+		return ejecutarBalances("Voluntarias", SQL_VOLUNTARIAS, params);
 	}
 
 	public List<BalanceDiario> consultarRetiroProgramado(LocalDate fechaCorte) {

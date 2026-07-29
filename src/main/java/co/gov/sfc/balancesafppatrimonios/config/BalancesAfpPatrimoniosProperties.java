@@ -77,6 +77,12 @@ public class BalancesAfpPatrimoniosProperties {
 	private Integer codigoPatrimonioRetiroProgramado;
 
 	@NotNull
+	private Integer tipoEntidadVoluntarias;
+
+	@NotNull
+	private Integer tipoInformeVoluntarias;
+
+	@NotNull
 	private Integer tipoPatrimonioMayorRiesgo;
 
 	@NotNull
@@ -268,6 +274,22 @@ public class BalancesAfpPatrimoniosProperties {
 
 	public void setCodigoPatrimonioRetiroProgramado(Integer codigoPatrimonioRetiroProgramado) {
 		this.codigoPatrimonioRetiroProgramado = codigoPatrimonioRetiroProgramado;
+	}
+
+	public Integer getTipoEntidadVoluntarias() {
+		return tipoEntidadVoluntarias;
+	}
+
+	public void setTipoEntidadVoluntarias(Integer tipoEntidadVoluntarias) {
+		this.tipoEntidadVoluntarias = tipoEntidadVoluntarias;
+	}
+
+	public Integer getTipoInformeVoluntarias() {
+		return tipoInformeVoluntarias;
+	}
+
+	public void setTipoInformeVoluntarias(Integer tipoInformeVoluntarias) {
+		this.tipoInformeVoluntarias = tipoInformeVoluntarias;
 	}
 
 	public Integer getTipoPatrimonioMayorRiesgo() {
