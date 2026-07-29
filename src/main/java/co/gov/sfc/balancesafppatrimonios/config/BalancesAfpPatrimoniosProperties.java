@@ -65,6 +65,24 @@ public class BalancesAfpPatrimoniosProperties {
 	private Integer codigoPatrimonioConservador;
 
 	@NotNull
+	private Integer tipoPatrimonioModerado;
+
+	@NotNull
+	private Integer codigoPatrimonioModerado;
+
+	@NotNull
+	private Integer tipoPatrimonioRetiroProgramado;
+
+	@NotNull
+	private Integer codigoPatrimonioRetiroProgramado;
+
+	@NotNull
+	private Integer tipoEntidadVoluntarias;
+
+	@NotNull
+	private Integer tipoInformeVoluntarias;
+
+	@NotNull
 	private Integer tipoPatrimonioMayorRiesgo;
 
 	@NotNull
@@ -224,6 +242,54 @@ public class BalancesAfpPatrimoniosProperties {
 
 	public void setCodigoPatrimonioConservador(Integer codigoPatrimonioConservador) {
 		this.codigoPatrimonioConservador = codigoPatrimonioConservador;
+	}
+
+	public Integer getTipoPatrimonioModerado() {
+		return tipoPatrimonioModerado;
+	}
+
+	public void setTipoPatrimonioModerado(Integer tipoPatrimonioModerado) {
+		this.tipoPatrimonioModerado = tipoPatrimonioModerado;
+	}
+
+	public Integer getCodigoPatrimonioModerado() {
+		return codigoPatrimonioModerado;
+	}
+
+	public void setCodigoPatrimonioModerado(Integer codigoPatrimonioModerado) {
+		this.codigoPatrimonioModerado = codigoPatrimonioModerado;
+	}
+
+	public Integer getTipoPatrimonioRetiroProgramado() {
+		return tipoPatrimonioRetiroProgramado;
+	}
+
+	public void setTipoPatrimonioRetiroProgramado(Integer tipoPatrimonioRetiroProgramado) {
+		this.tipoPatrimonioRetiroProgramado = tipoPatrimonioRetiroProgramado;
+	}
+
+	public Integer getCodigoPatrimonioRetiroProgramado() {
+		return codigoPatrimonioRetiroProgramado;
+	}
+
+	public void setCodigoPatrimonioRetiroProgramado(Integer codigoPatrimonioRetiroProgramado) {
+		this.codigoPatrimonioRetiroProgramado = codigoPatrimonioRetiroProgramado;
+	}
+
+	public Integer getTipoEntidadVoluntarias() {
+		return tipoEntidadVoluntarias;
+	}
+
+	public void setTipoEntidadVoluntarias(Integer tipoEntidadVoluntarias) {
+		this.tipoEntidadVoluntarias = tipoEntidadVoluntarias;
+	}
+
+	public Integer getTipoInformeVoluntarias() {
+		return tipoInformeVoluntarias;
+	}
+
+	public void setTipoInformeVoluntarias(Integer tipoInformeVoluntarias) {
+		this.tipoInformeVoluntarias = tipoInformeVoluntarias;
 	}
 
 	public Integer getTipoPatrimonioMayorRiesgo() {
